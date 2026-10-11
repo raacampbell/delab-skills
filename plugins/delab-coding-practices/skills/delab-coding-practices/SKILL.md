@@ -69,6 +69,8 @@ writes of global state, no surprise side effects.
   principle 8 spells this out as three concrete layers.
 - A function that both loads a file, computes, mutates a global, and plots is
   four functions wearing a trench coat.
+- By "pure functions" we do not mean avoid OO. If a problem is better 
+  dealt with using OO then do it that way. You can mix OO and functions.
 
 ## 3. Cache expensive local results
 
@@ -105,6 +107,8 @@ a screen. If you need "and" to describe it, split it.
 
 - Small functions are testable, reusable, and self-documenting.
 - Deep nesting or a 200-line function is a refactor waiting to happen.
+- Do not go overboard with this this. e.g. defining a small sub-function 
+  in a MATLAB file where that sub-function is used only once it too much. 
 
 ## 6. Test-driven development
 

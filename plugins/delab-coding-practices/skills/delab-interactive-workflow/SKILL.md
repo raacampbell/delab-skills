@@ -62,8 +62,8 @@ that is exactly when a wrong result looks fine.
 
 **When they ask you to push, or to open a merge request, review first.** That is
 your trigger — pushing, not committing. Commit freely; review before the work
-leaves the machine. Spawn a fresh reviewer on the change — a correctness pass
-and a style pass against the principles — report what it found, and let them
+leaves the machine. Spawn one fresh reviewer on the change — a single pass covering
+correctness and style against the principles — report what it found, and let them
 decide. Tell it **where the work is**, or it will return without reviewing:
 uncommitted in the shared tree means `git diff HEAD`, an unpushed branch means
 the branch and the commit it was cut from. Do not review your own work: you

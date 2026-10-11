@@ -5,7 +5,7 @@ lab's [elutils](https://github.com/erlichlab/elutils) conventions. Where elutils
 already establishes a pattern (`+packages`, `utils.inputordefault`, axis-handle
 plotting), follow it so lab code stays consistent.
 
-**MATLAB has no package manager and one function per file** — two facts that
+**MATLAB has no package manager and only one externally accesible function per file** — two facts that
 shape several principles below. Organize with `+package` folders, manage the
 path with a MATLAB Project (`.prj`) or a `setup.m`, test with `matlab.unittest`
 (`runtests`), and pull shared helpers from elutils (`utils.`, `stats.`, `draw.`).
@@ -49,9 +49,12 @@ perf = stats.bootmean(x);                % from elutils, namespaced
 
 ## 2. Functional code
 
-Prefer pure functions; pass data in and return results. Never reach into the
-base workspace (`evalin`/`assignin`) or lean on `global` — both are invisible
-state that breaks reuse and testing.
+Prefer pure functions; pass data in and return results. Reach into the base
+ workspace (`evalin`/`assignin`) only for very good reasons. e.g. You need to access
+a running object that lives there. Do not lean on `global` — both are invisible state that
+ breaks reuse and testing. If writing object-oriented code makes more sense than a bunch
+of functions then do that. Readability and portability also matter, and those can be higher
+with a well-written class. 
 
 ❌ **Before** — `global` state and I/O tangled together
 

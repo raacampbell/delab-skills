@@ -58,7 +58,18 @@ agent's own documentation; the intent is what has to survive, not the spelling.
 roughly one focused change each. Prefer many small items over one large one;
 agents (and reviews) do better on a tight scope.
 
-**Write each work item down** — always, before it is built — with:
+**Batch trivial items.** Small is not the same as separate: several `simple`
+items that touch the same files or share one rationale go to one worker as one
+work item with one review. Each item pays a fixed cost — a worker cold start, a
+reviewer, an MR — so split only where the pieces are independent or the scope
+would otherwise sprawl.
+
+**Write each work item down** — always, before it is built. A `complex` item,
+or one that touches results behind a figure, gets the full form below. A
+`simple` item gets the **short form**: title, one or two sentences of what and
+why, the acceptance criteria, and `type` / `complexity` / `status` — no
+separate inputs/outputs section unless an interface actually changes. The full
+form has:
 
 - **Title** — imperative and specific.
 - **Description** — what and why.
@@ -136,13 +147,15 @@ though they were recorded.
   complex work on an unconfirmed plan.
 
 **Keep the worklist visible — this is a hard rule.** The issues are the durable
-record, but the PI is reading a terminal, not GitLab. End every reply that
-changes the state of the work with the full list of items, one line each, marked
+record, but the PI is reading a terminal, not GitLab. End every reply where an
+item **changes status** — it starts, goes to review, finishes, blocks, or needs
+the PI — with the full list of items, one line each, marked
 `todo` / `in progress` / `in review` / `done` / `awaiting your confirmation` /
 `blocked`. Not a summary of what you just did — the whole list, every time, so
-the PI never has to reconstruct it by scrolling. The complexity gate above
-produces items awaiting confirmation, and those are the ones the PI most needs
-to see, so the list goes in that reply too.
+the PI never has to reconstruct it by scrolling. A reply that moves no item —
+a clarifying answer, a progress note — does not need the list repeated. The
+complexity gate above produces items awaiting confirmation, and those are the
+ones the PI most needs to see, so the list goes in that reply too.
 
 **Delegate** one `delab-coding-practices:delab-coder` subagent per issue. It has
 the principles preloaded; give it the issue, the relevant files only, and (if
@@ -176,18 +189,24 @@ strongest model; adversarial review does, because it is the step that stops a
 wrong result reaching a figure. Escalate a specific worker when an item turns
 out to be genuinely hard.
 
-**Orchestrate review.** When the worker reports done, spawn a fresh
-`delab-coding-practices:delab-reviewer` (never the author) — once for an
-adversarial **correctness** pass and once for a **style** pass against the
-`delab-coding-practices` skill. Collect the findings, assign fixes, and
-re-review if the fixes are non-trivial.
+**Orchestrate review.** When the worker reports done, spawn **one** fresh
+`delab-coding-practices:delab-reviewer` (never the author). It does a single
+pass covering adversarial **correctness** and **style** against the
+`delab-coding-practices` skill, and labels each finding `[correctness]` or
+`[style]`. Collect the findings and assign fixes.
+
+**Re-review only when a `[correctness]` finding was fixed.** Then spawn a fresh
+reviewer on the fix, scoped to the changed lines. Style-only fixes are not
+re-reviewed by an agent: read the fix diff yourself to confirm each finding was
+addressed.
 
 **Code you write yourself** must already follow the principles — you are not
 exempt for being the PM — and explain the *why* as you go, so the person learns
 the reasoning rather than just receiving a rule.
 
 **Record the review in the merge request description** — what was reviewed,
-what it found, what you did about it. The repository's MR template carries that
+what it found, what you did about it. For a `simple` item this is two or three
+lines, not a report. The repository's MR template carries that
 section for a person opening one in the browser, but an MR you create yourself
 gets the description you give it and no template, so the record is yours to
 write. An MR that does not say it was reviewed should not be merged.
@@ -254,12 +273,16 @@ not told which, return and say what you need — a subagent has no channel to as
 so guessing is the only alternative and it is the wrong one. A review of the
 wrong tree reports that nothing is wrong, which is worse than no review.
 
+Make one pass over the diff and cover both parts below, correctness first.
+Label each finding `[correctness]` or `[style]`.
+
 - **Correctness review:** hunt for bugs, wrong math or statistics, unhandled edge
   cases, and silent failures (principle 9). For data science, verify ground-truth
   recovery on the synthetic data and sanity-check magnitudes and units.
-- **Style review:** check the change against every principle in the
+- **Style review:** check the change against the principles in the
   `delab-coding-practices` skill, and cite the principle number for each
-  finding.
+  finding. Skip principles 4, 5, 11 and 12: they guide writers and are not
+  review findings.
 
 Report concrete findings — `file:line`, what's wrong, and why — ranked by
 severity. Do not rubber-stamp; "looks fine" is not a review.

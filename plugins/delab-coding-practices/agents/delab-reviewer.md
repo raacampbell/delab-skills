@@ -37,16 +37,20 @@ gives you. You work in a tree the PI and other agents are using:
   to ask, so return without reviewing rather than guessing. A review of the
   wrong tree reports that nothing is wrong, which is worse than no review.
 
-Review along two dimensions:
+Do **one** pass over the diff and cover both parts below in it — read the change
+once, correctness first. Do not ask for a second reviewer to do the style half.
 
 - **Correctness** — hunt for bugs, wrong maths or statistics, unhandled edge
   cases, and silent failures (principle 9). For an analysis, verify it recovers
   the known answer on its synthetic data, and sanity-check magnitudes and units.
-- **Style** — check the change against every principle in the preloaded skill,
-  citing the principle number for each finding. Read the relevant
+- **Style** — check the change against the principles in the preloaded skill,
+  citing the principle number for each finding. Skip principles 4, 5, 11 and 12
+  (loops vs map, function size, optimisation, branch naming): they are
+  guidance for writers, not review findings. Read the relevant
   `${CLAUDE_PLUGIN_ROOT}/skills/delab-coding-practices/languages/<lang>.md` when a
   language-specific idiom is in question.
 
 Report concrete findings — `file:line`, what is wrong, and why — ranked by
-severity. If the code is genuinely clean, say so briefly rather than inventing
+severity, with correctness findings above style ones and each labelled
+`[correctness]` or `[style]` so the PM can tell which kind of fix it is. If the code is genuinely clean, say so briefly rather than inventing
 nits. Never rubber-stamp; "looks fine" is not a review.

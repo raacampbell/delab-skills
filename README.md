@@ -15,23 +15,28 @@ It's built around two goals:
 
 ## Install as a plugin
 
-In Claude Code, add this repo as a marketplace and install the plugin:
+This is a fork of the lab's plugin with a faster, cheaper review loop (see
+[CHANGELOG.md](CHANGELOG.md)). In Claude Code, add the fork as a marketplace and
+install the plugin:
 
 ```
-/plugin marketplace add erlichlab/delab-skills
+/plugin marketplace add raacampbell/delab-skills
 /plugin install delab-coding-practices@delab
 ```
 
-The first line registers the `delab` marketplace; the second installs the
-`delab-coding-practices` plugin from it. Once installed, the principles skill loads
+The first line registers the `delab` marketplace from the fork; the second
+installs the `delab-coding-practices` plugin from it. If you already added the
+lab's upstream marketplace (`erlichlab/delab-skills`), it uses the same name, so
+remove it first with `/plugin marketplace remove delab`, then add the fork. To
+get later changes, run `/plugin marketplace update delab`. Once installed, the principles skill loads
 automatically when you're writing or reviewing lab code, and you get two
 commands and two orchestration agents (below).
 
-> **Where the repo lives.** Development happens on GitLab
-> (`sainsbury-wellcome-centre/delab/delab-skills`); `erlichlab/delab-skills` on
-> GitHub is a mirror, and it's what `/plugin marketplace add` fetches — Claude
-> Code's `owner/repo` shorthand resolves to GitHub. Send merge requests to
-> GitLab. You can also add a marketplace straight from a local clone:
+> **Where the repo lives.** The lab's upstream is developed on GitLab
+> (`sainsbury-wellcome-centre/delab/delab-skills`) and mirrored to
+> `erlichlab/delab-skills` on GitHub. This fork lives at
+> `raacampbell/delab-skills` on GitHub, which is what the install line above
+> fetches — Claude Code's `owner/repo` shorthand resolves to GitHub. You can also add a marketplace straight from a local clone:
 > `/plugin marketplace add /path/to/delab-skills`.
 
 ### Start a session with a workflow
@@ -76,7 +81,7 @@ delegates to them without hand-wiring the standards each time:
 | Agent | Role | Model | Isolation |
 | --- | --- | --- | --- |
 | **`delab-coder`** | Implements one work item (TDD for infrastructure, synthetic-data-first for analysis) | `sonnet` | own git worktree |
-| **`delab-reviewer`** | Fresh, adversarial correctness and style review, citing principle numbers; reports, never fixes | inherits yours | shared tree |
+| **`delab-reviewer`** | Fresh, adversarial review in one pass (correctness, then style), citing principle numbers; reports, never fixes | inherits yours | shared tree |
 
 Workers get their own worktree so several can run at once without fighting over
 the branch your working tree has checked out — assume the PI and other agents
@@ -112,7 +117,7 @@ discover skills from `.agents/skills/` — copy the skill directory there in you
 project, or into `~/.agents/skills/` to have it everywhere:
 
 ```bash
-git clone https://github.com/erlichlab/delab-skills.git   # mirror of the GitLab repo
+git clone https://github.com/raacampbell/delab-skills.git
 mkdir -p ~/.agents/skills   # without this, cp silently names the skill "skills"
 cp -r delab-skills/plugins/delab-coding-practices/skills/delab-coding-practices \
       ~/.agents/skills/
@@ -134,8 +139,8 @@ attached context — `SKILL.md` plus the `languages/` file for the language you'
 working in:
 
 ```
-https://raw.githubusercontent.com/erlichlab/delab-skills/main/plugins/delab-coding-practices/skills/delab-coding-practices/SKILL.md
-https://raw.githubusercontent.com/erlichlab/delab-skills/main/plugins/delab-coding-practices/skills/delab-coding-practices/languages/python.md
+https://raw.githubusercontent.com/raacampbell/delab-skills/main/plugins/delab-coding-practices/skills/delab-coding-practices/SKILL.md
+https://raw.githubusercontent.com/raacampbell/delab-skills/main/plugins/delab-coding-practices/skills/delab-coding-practices/languages/python.md
 ```
 
 The PM / worker / reviewer workflow does not travel as *machinery*: `delab-coder`
@@ -229,7 +234,7 @@ before opening a merge request.
 
 ## Status
 
-`v2.0`. Coding practices and workflows are separate skills: pick a workflow at
+`v2.1`. Coding practices and workflows are separate skills: pick a workflow at
 the start of a session, and the principles come with it. All four language
 files (Python, Julia, MATLAB, R) are fleshed out, and every skill follows the
 Agent Skills standard, so they travel to agents other than Claude Code.

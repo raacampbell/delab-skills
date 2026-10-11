@@ -36,12 +36,13 @@ PM decomposes into small work items, each written down
                               (infra → TDD;  data science → synthetic-data-first)
                                                                 │
                                                                 ▼
-                        fresh reviewer subagents (NOT the author):
+                        one fresh reviewer subagent (NOT the author):
                           • adversarial correctness review
                           • style review against the principles
                                                                 │
                                                                 ▼
                               fix findings → merge request → main → close issue
+                              (re-review only if a correctness fix was made)
 ```
 
 ## Your responsibilities
@@ -82,14 +83,20 @@ one.
 ## Reviews are adversarial and separate
 
 Never let the agent that wrote the code be the one that approves it — same
-confirmation bias as a person marking their own homework. Require **two fresh
-reviewer subagents**:
+confirmation bias as a person marking their own homework. Require a **fresh
+reviewer subagent**, which makes one pass over the diff with two parts:
 
 - **Correctness** — actively tries to break it: wrong results, edge cases, silent
   failures (principle 9). For analyses, that it recovers the known answer on
   synthetic data (below) and that magnitudes and units are sane.
-- **Style** — conformance to every principle in the `delab-coding-practices`
-  skill.
+- **Style** — conformance to the principles in the `delab-coding-practices`
+  skill, except 4, 5, 11 and 12 (loops vs map, function size, optimisation,
+  branch naming), which guide writers and are not reviewed.
+
+Findings are labelled `[correctness]` or `[style]`. The reviewer is run again
+only when a correctness finding was fixed; a style-only fix is checked by the PM
+reading the diff. Keep a person's eyes on anything headed for a paper
+regardless.
 
 ## Infrastructure vs data science
 

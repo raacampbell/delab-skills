@@ -58,7 +58,13 @@ A collaborator runs `uv sync` and gets the exact same environment.
 
 ## 2. Functional code
 
-Keep computation pure; push I/O, globals, and plotting to the edges.
+Keep computation pure; push I/O, globals, and plotting to the edges. Pure does
+not mean "no classes": if a problem is clearer as an object — a session that
+owns its loaded data, a fitted model with state — write a class (a
+`dataclass` is often enough), and mix classes and functions freely. What to
+avoid is invisible state: module-level mutable globals and functions that
+quietly depend on them. Readability and portability matter too, and a
+well-written class can win on both.
 
 ❌ **Before** — reads a global, mutates a global, plots, all in one
 
@@ -173,6 +179,11 @@ pass it in and bind it: `map(partial(fit_subject, big_df), subjids)` — see
 principle 2.)
 
 ## 5. Small, single-purpose functions
+
+Don't go overboard. A helper that is called from exactly one place and is
+clear inline (a two-line filter, say) is better left where it is than moved
+into its own function. Split when a piece has a name worth giving, is reused,
+or needs its own test.
 
 ❌ **Before** — one function loads, cleans, models, and plots
 
